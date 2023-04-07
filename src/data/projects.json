@@ -1,0 +1,290 @@
+[
+  {
+    "id": "kojo-oa-scanning",
+    "title": "Kojo Document Scanning",
+    "description": "When one of our customers, the subcontractor buying materials, sends an order to a vendor, the vendor sends back a document called an Order Acknowledgement (OA), which basically confirms the order and locks in the pricing of the individual line items. These documents are usually PDFs. Previously, in Kojo, when the vendor send back this OA document, the Kojo user had to manually enter the pricing from the PDF into the Kojo system to then sync either their accounting software. This was a manual and time consuming process, especially for long orders that can have many line items.\n\n Our new feature used OCR technology using a Microsoft Azure Machine Learning model and API to read the PDF and automatically pull out the pricing of the line items to enter them directly into Kojo, saving the Kojo user the manual effort. This saves them tons of time and also is less prone to typos and misclicks. It also keeps the information up to date. \n\n I was the Team Lead of the team working on this project, so I was responsible for overseeing the project, writing much of the code, and reviewing all of the code written by other engineers. I helped with the user research on this project, working with my designer and product manager (PM) to conduct interviews, learn about the problem space, and define requirements. \n\n There were several challenges in this project. First, we needed to decide which technology to do the document scanning. We had to evaluate different solutions, ultimately deciding between two, Infrrd and Azure. It was difficult because they send back data in different ways, had different wait times, and one used a callback url while the other was just a synchronous request. We chose Azure because it was easier to use from a developer perspective and was far cheaper.\n\n Another big challenge was dealing with scans that didn't return data with 100% accuracy. PDFs from our vendors come in all different sizes, layouts, and qualities. When Azure's ML model returns results, it doesn't always match up with the original order, because it can't have 100% accuracy. Sometimes line item information was split up between multiple lines. Our solution was a clever algorithm that would check the total number of line items vs the line items on the order, and the number of cells that were empty vs filled, and intelligently combine rows so the data would be accurate. \n\n We had another challenge with different Units of Measure. Normally, for most items, the 'Extended Price' is a simple calculation of 'Unit Price x Quantity'. However, some items we noticed had an extended price that was less than the unit price, which didn't make sense, and was causing errors with accounting systems we integrate with. We solved the challenge by updating our algorithms to also take the 'Units of Measure' column into account, which could be 'Each', but sometimes would be 'C' or 'M', which meant the unit prices for 'C' would be a in a set of 100, or 1000 for M. We updated our code to calculate the Unit Price ourselves, rather than rely on the Unit Price that Azure's ML model scanned, to maintain correct calculations.",
+    "bannerImage": "oaBanner1.jpg",
+    "additionalImages": [
+      "oa1.png",
+      "oa2.png"
+    ],
+    "links": [
+      {
+        "name": "Kojo article explanation",
+        "url": "https://intercom.help/use-kojo/en/articles/6565012-intelligent-order-acknowledgments"
+      }
+    ],
+    "date": "Fall 2022",
+    "skills": [
+      "React",
+      "Javascript",
+      "Typescript",
+      "GraphQL",
+      "Postgres",
+      "CSS",
+      "Azure",
+      "OCR"
+    ]
+  },
+  {
+    "id": "kojo-rebranding",
+    "title": "Kojo Rebranding",
+    "description": "Kojo was originally called Agora Systems. However, due to overlap with another company called 'Agora', in April of 2022 we embarked on a rebrand to modernize our brand and stand out. We had less than 6 weeks to finish the project due to a cease and desist order from the other 'Agora.' So not only was this rebrand saving ourselves from a brand lawsuit battle, it also set us up for success to be a new modern brand that stuck out. This included changing much of the design of the whole mobile application. This meant new colors, new icons, new loading screens, new fonts, tutorials, new copy, as well as updating our app store listings in both the Apple App Store and Google Play Store. \n\n We also had to change much of our email and server infrastructure, as we sent emails from kojo.app instead of agora.systems. \n\n We also had to ensure our existing customers updated that app, which included email campaigns letting them know of the changes and showing links to update.\n\n This also included rigorous testing of the entire application, making sure each screen and component included our new style guidelines, colors, fonts, copy, etc. I led the rebrand on the mobile app, writing most of the rebrand code as well as leading the testing. \n\n I decided early on in the project that I would also modernize and refactor much of our code, in particular how we defined colors. We had much tech debt around our existing color system, so I took it upon myself to rewrite that code and make it dead simple to create colors. \n\n I set up guidelines so that future engineers would find it easy to write new UI and define colors. So rather than defining custom hex codes for the color of some text, like the gray '#ACACA5', the engineer simply wrote 'textGray.' That way each color was defined in the context of its application. So the engineer doesn't actually need to worry about the specific color, but rather can just make the easy color choice like 'appBackground' or 'primarySectionBackground' rather than defining customer colors. This also made our codebase only use about 12 different colors, which before were closer to 30.",
+    "bannerImage": "rebrandBanner1.jpg",
+    "additionalImages": [
+      "rebrand1.png",
+      "rebrand2.png",
+      "rebrand3.png"
+    ],
+    "links": [
+      {
+        "name": "My Blog Post on Rebranding",
+        "url": "https://medium.com/kojo-engineering/rebranding-to-kojo-4ad8d8660e5d"
+      },
+      {
+        "name": "Rebranding Press Release",
+        "url": "https://www.prnewswire.com/news-releases/construction-procurement-platform-agora-announces-rebrand-to-kojo-expands-into-all-major-trades-301552428.html"
+      }
+    ],
+    "date": "April 2022",
+    "skills": [
+      "React Native",
+      "CSS",
+      "Javascript",
+      "Typescript",
+      "Documentation",
+      "Styled Components"
+    ]
+  },
+  {
+    "id": "kojo-deliveries-v2",
+    "title": "Kojo Deliveries V2",
+    "description": "The Deliveries V2 is a feature that allows field users to:\n- Select an Order to receive material against\n- Load all of the items in the order into the mobile app, and allow the user to go through each individual item, marking it as Delivered or with an Issue, as well as photo upload attachments for each item\n- Take a photo of the packing slip / receipt, which is key to the office users to reconcile the differences with the vendors\n- Notify their coworkers and/or the vendor of the issues with the delivery\n- Notify via email and via in-app notification in the web application\n\n The code for this project was javascript and React Native, which compiles into both iOS and Android apps. \n\n This was a fullstack project that touched many pieces of our codebase, and some external APIs, like interacting with the the camera model in the mobile application, and uploading photos to S3 for storage. I also wrote tests to ensure our backend routes and API calls were thoroughly tested and covered. \n\n There were many challenges to this project. Some smaller ones included working with native packages like the camera module and uploading existing photos. This is complex due to different permissions in iOS and Android systems. \n\n The biggest challenge for this project was probably a data structure and logic issue around multiple deliveries against the same order. This was tricky because we didn't know multiple deliveries be a feature requirement originally, so we had to edit our approach after the fact. We had originally built a 1 order <> 1 delivery relationship. The  clever solution consisted of marking the previous delivery as 'archived', copying the current 'state of truth' about those materials over to the new delivery (if items were received, damaged, missing, etc), allow the field user to continue to check in the 'remaining' items that weren't originally received, or go back and modify existing values. This allowed field users the ability to correct mistakes or edit values from previous deliveries",
+    "bannerImage": "deliveriesBanner1.jpg",
+    "additionalImages": [
+      "deliveries1.png"
+    ],
+    "links": [
+      {
+        "name": "Kojo Website",
+        "url": "https://www.usekojo.com/"
+      }
+    ],
+    "date": "Q3 & Q4 2021",
+    "skills": [
+      "React Native",
+      "Node.js",
+      "Javascript",
+      "Typescript",
+      "GraphQL",
+      "Postgres",
+      "AWS",
+      "S3"
+    ]
+  },
+  {
+    "id": "kojo-mechanical-catalog",
+    "title": "Kojo Mechanical Catalog",
+    "description": "To unlock selling to mechanical and plumbing customers, Kojo needed to create a robust mechanical catalog that our field and office users would find relevant and useful, so they could order materials effectively. We could leverage some of the code infrastructure from the electric catalog, but we needed entirely new data in the mechanical and plumbing space. We scraped data from a leading mechanical vendor's website, cleaned and indexed the data, and exposed those parts, over 250,000 items, in our mechanical catalog. \n\nEach item included product names, descriptions, pictures, links to cutsheets / manuals / other relevant information, manufacturer information, and tons of facets.\n\n This project entailed scraping the data, transforming it into our database structure, and then indexing the data so we couldn't quickly search and filter it. I used Python and a framework called Scrapy to recursively crawl through the huge mechanical vendor website, pulling information from each page of data and transforming it into a readable and index-able data structure. The site had over 250,000 parts, so I worked with an external API called Zyte that would run my scraper in the background and return results in an API that I could call and transform into our database --  tt also took nearly 50 hours to run.\n\nIt was tricky because the format of the website sometimes changed. Our web scraper relies on DOM elements to be consistent so it call pull out the relevant information to traverse the DOM tree. I had to rewrite the scraper twice to make adjust for the changes on vendor website during the project. \n\nTraversing all of the different 250,000 items was difficult. They don't have a list of 'ALL' items that I could page through. Each item was listed under from 1 to up to 6 sub categories. So I had to write a recursive algorithm that traversed from one sub category to another, capturing the links of the tree to parse next, to make sure I wasn't missing any items.",
+    "bannerImage": "mechanicalBanner1.png",
+    "additionalImages": [
+      "mechanical1.png",
+      "mechanical2.png"
+    ],
+    "links": [
+      {
+        "name": "Kojo Mechanical",
+        "url": "https://www.usekojo.com/solutions-old/mechanical-contractors"
+      }
+    ],
+    "date": "Fall 2021",
+    "skills": [
+      "Python",
+      "Webscraping",
+      "Javascript",
+      "Typescript",
+      "Elasticsearch",
+      "Postgres",
+      "Zyte",
+      "Scrapy"
+    ]
+  },
+  {
+    "id": "lever-momentum",
+    "title": "Lever Momentum Design Library",
+    "description": "The aim of the Momentum subteam was to create and maintain the visual design language and design system for Lever. Lever puts a lot of importance into the User Interface and User Experience on its application. \n\n More importantly, the Momentum design system enables engineers at Lever to create new pages and features quickly and effectively. Writing custom CSS is a burden to most engineers. It's confusing and time consuming, and very difficult to maintain. Momentum allows engineers to build UI without writing CSS, instead having nicely formatted components or allowing adding very basic utility classes that handle styling for the engineer. Before I joined the subteam, Momentum was pretty new, with only a few components and not very much usage, in the application, less than 10% of the Lever application. There was very limited documentation of how to use the components. By the time I left Lever, there was a full internal documentation site I helped write, that included a playground where users could test out the new components and different variations before implementing them into their actual code. \n\n Components consisted of simple components like buttons, checkboxes, tabs, and forms, to more complex components like mutli-select dropdowns, toaster menus, and custom animations. \n\n Momentum also included utility classes that replaces writing custom CSS. So adding the class 'p1' would add 8 pixels of padding around the component, which is convenient because Lever uses an 8 pixel grid. \n\n I personally developed several components, including an accordion drawer, a file upload component, and a asynchronous picker.\n\n I also created a branch new page for iconography documentation that was searchable and user friendly. I also worked on adding accessibility improvements to existing components. Finally, I developed animation utility classes, so developers could easily add animations to components, like fade-ins, slide-ins, and more.",
+    "bannerImage": "momentumBanner1.jpg",
+    "additionalImages": [
+      "momentum1.png",
+      "momentum2.png",
+      "momentum3.png"
+    ],
+    "links": [
+      {
+        "name": "My blog post on Momentum",
+        "url": "https://fulcrum.lever.co/building-beautiful-new-features-with-zero-lines-of-css-8a7b1a2550ef"
+      },
+      {
+        "name": "Icons blog post",
+        "url": "https://fulcrum.lever.co/an-icon-in-a-hay-stack-69c6e92ecbe7"
+      },
+      {
+        "name": "Icons in action - youtube",
+        "url": "https://www.youtube.com/watch?v=T2xaYiVwH6M"
+      }
+    ],
+    "date": "August 2019",
+    "skills": [
+      "Javascript",
+      "Utility Classes",
+      "Documentation",
+      "CSS"
+    ]
+  },
+  {
+    "id": "lever-confidential-postings",
+    "title": "Lever Confidential Postings",
+    "description": "Implemented a new feature in the Lever web application for posting and managing confidential job listings. The most difficult part of this project was dealing with permissions. Previously, most of our permissions had been based on the user's role, which included: Super Admin, Admin, Team Member, Limited Team Member, and Interviewer. However, we need to be able to define customer permissions, so that individual could be added / removed for being able to view the posting, rather than everyone that had that role. This meant we had to refactor several existing functions and build a robust solution to deal with permissions that would be useful moving forward. \n\n It was also difficult to build the frontend entirely using Momentum / our design system, since several of the component didn't exist yet. So I invested the time to build these new components so that future engineers could use it easily, rather than having to build it from scratch like i did. ",
+    "bannerImage": "confidentialBanner1.png",
+    "additionalImages": [
+      "confidential1.png",
+      "confidential2.png",
+      "confidential3.png"
+    ],
+    "links": [
+      {
+        "name": "Creating Confidential Postings",
+        "url": "https://help.lever.co/hc/en-us/articles/360039516671-Creating-and-managing-confidential-requisitions"
+      },
+      {
+        "name": "Press Release",
+        "url": "https://hrtechfeed.com/lever-adds-new-features-auto-screening-confidential-postings-and-more/"
+      }
+    ],
+    "date": "2020",
+    "skills": [
+      "Typescript",
+      "Javascript",
+      "MongoDB",
+      "Derby"
+    ]
+  },
+  {
+    "id": "hashtag-gloves",
+    "title": "Hashtag Gloves",
+    "description": "#HashtagGloves was a hackathon project from HackHolyoke in the Fall of 2014. Working in a team of four, we developed a pair of gloves with conductive fabric on the tips of the fingers, so that when the user tapped their fingers together in the 'hashtag' gesture, this triggered a voice recognition listener and would 'tweet' whatever was said from the user's account. We used an Arduino wired to the gloves, as well as a Python script using Twitter's API and Google Voice API. \n\n Inspired by a silly Jimmy Fallon and Justin Timberlake sketch, this project won us 3rd place at the Hackathon! A week later, we were approached from a writer of the DailyDot asking if he could interview us about our creation. We agreed, and several days later, a fun article was published. To our surprise, many other news sites, including ones like Gizmodo, Buzzfeed, and Today.com also published articles about our project. The feedback was quite extreme, as some deemed them innovative and others 'objectively the worst gloves.' Gizmodo wrote a hate article about us, but we weren't too hurt since they thought this was a product going to market rather than a silly hackathon project. ",
+    "bannerImage": "gloveBanner1.png",
+    "additionalImages": [
+      "glove1.jpg",
+      "glove2.jpg"
+    ],
+    "links": [
+      {
+        "name": "Daily Dot",
+        "url": "https://www.dailydot.com/debug/hashtag-gloves-send-tweets/"
+      },
+      {
+        "name": "Today.com",
+        "url": "https://www.today.com/money/jimmy-fallon-inspires-college-kids-invent-hashtag-gloves-1d80337731"
+      },
+      {
+        "name": "Buzzfeed",
+        "url": "https://www.buzzfeed.com/juliegerstein/these-colllege-kids-made-gloves-thatll-tweet-for-you"
+      },
+      {
+        "name": "Gizmodo",
+        "url": "https://gizmodo.com/hashtag-gloves-1666133010"
+      }
+    ],
+    "date": "November 2014",
+    "skills": [
+      "Python",
+      "Arduino",
+      "Twitter API",
+      "Google Voice API"
+    ]
+  },
+  {
+    "id": "freelance-graphic-design",
+    "title": "Freelance Graphic Design",
+    "description": "During the summer of 2015, I decided I was interested in learning more about graphic design. At the motivation of my brother, I decided to start The 100 Day Project. Simply put, I would make a graphic using Adobe Illustrator for 100 days straight. I started out with very basic knowledge of the program. But after working with Illustrator for 30-90 minutes per day for 100 days straight, I evolved into a competent graphic designer. It started as a way to challenge and test myself with learning new software, but turned into a routine that I enjoyed and found myself becoming excited about graphic design. I started reading more design blogs, searching for inspiration, and putting my work on sites like Behance. Then, I started freelancing, working with clients most on brand identifies, including logo design and branding. In the Spring of 2017, I studied Graphic Design at DIS Copenhagen during my study abroad, furthering my interest and skills.",
+    "bannerImage": "designBanner1.jpg",
+    "additionalImages": [
+      "design1.png",
+      "design2.png",
+      "design3.png",
+      "design4.png",
+      "design6.png",
+      "design7.png",
+      "design8.png",
+      "design10.png",
+      "design11.png",
+      "design12.png",
+      "design13.png",
+      "design15.png",
+      "design16.png"
+    ],
+    "links": [
+      {
+        "name": "Behance",
+        "url": "https://www.behance.net/keenanzucker"
+      },
+      {
+        "name": "Rebranding blog post",
+        "url": "https://medium.com/@keenanzucker/rebranding-normann-copenhagen-c0dfa2e5c565"
+      }
+    ],
+    "date": "2016-2020",
+    "skills": [
+      "Graphic Design",
+      "Branding",
+      "Visual Identity"
+    ]
+  },
+  {
+    "id": "microsoft-internship",
+    "title": "Microsoft Internship",
+    "description": "During the summer of 2017, I interned as a Software Engineer Intern at Microsoft in Redmond. I was a part of the SalesIT department, under MSIT. I worked on a personal project, rather than being integrated directly into a team. \n\n I researched, designed, and developed a 'Scrumbot' for Microsoft Teams. I conducted user research observing different current scrum teams and how they operate, especially with members in different locations. With agile methodology becoming a dominant form of software development cycles, holding successful daily standup meetings is important to a team's success.\n\n The bot could run asynchronous standup meetings. When the bot was added to a team in Microsoft Teams, it would ask for a Scrum Master to be set. This person could configure the daily scrum questions (or use the default yesterday, today, and blocker template) as well as the time to ping the team (a 10: 00am scrum). At that specified time, the bot would send an individual message to the members of the scrum team, ask for their daily update, and store their responses. The bot would then post the messages in a designated 'Standup' channel, to increase transparency across the team.\n\nI developed the bot using the Botbuilder SDK in Node.js. I also used Azure Web Service and Azure Table Storage for deployment and persistent storage. ",
+    "bannerImage": "microsoftBanner1.jpg",
+    "additionalImages": [
+      "microsoft-1.jpg"
+    ],
+    "links": [
+      {
+        "name": "Microsoft Website",
+        "url": "https://www.microsoft.com/en-us/"
+      }
+    ],
+    "date": "Summer 2017",
+    "skills": [
+      "Node.js",
+      "Javascript",
+      "Botbuilder SDK",
+      "Azure Web Services",
+      "Azure Table Storage"
+    ]
+  },
+  {
+    "id": "onshape-internship",
+    "title": "Onshape Internship",
+    "description": "For the summer of 2016, I interned as a software engineer at Onshape Inc, a browser and cloud based 3D CAD software company. My role was a client-side developer, which meant dealing with the large user-facing codebase, mostly in javascript and using the Angular.js framework. Onshape is an agile company that uses three week development cycles.\n\nWith about 100 full time employees and 170 million raised in venture capital, Onshape was a great opportunity for me to learn from industry leaders in the founding team (also the original founding team of Solidworks).\n\nI worked on the five-person User Interface team, with the same responsibilities as a full-time employee. We worked closely with both the User Experience Designers as well as Quality Assurance Engineers to write and maintain efficient, scalable, and as bug-free code as we could while keeping strong visual communication.\n\nI worked on various large scale projects as well as countless bug fixings. Some projects included working on the onboarding process for new users as they enter the app for the first time that was A/B testable by the admin users. ",
+    "bannerImage": "onshapeBanner1.jpg",
+    "additionalImages": [
+      "onshape1.png"
+    ],
+    "links": [
+      {
+        "name": "Onshape Webiste",
+        "url": "https://www.onshape.com/en/"
+      }
+    ],
+    "date": "Summer 2016",
+    "skills": [
+      "Angular.js",
+      "Javascript",
+      "Typescript",
+      "CSS",
+      "A/B Testing"
+    ]
+  }
+]
