@@ -1,8 +1,8 @@
 ## Using ChatGPT to get started
 
-Prompt:
+Prompt: Can you show me the react code for a personal portfolio website using create-react-app and react-router-dom. It should have pages for Home, About, Portfolio, and Contact
 
-Response:
+Response Below:
 
 1. First, make sure you have react-router-dom installed by running the following command in your terminal:
 
